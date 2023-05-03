@@ -977,6 +977,9 @@ button,input,select,textarea,label{
     background-image: linear-gradient(to bottom, #f8c811, #fe922a, #ef6046, #cc375a, #992065, #772366, #542461, #322256, #26244c, #1e2441, #1c2234, #1d2026);
     background-size: cover;
 }
+.hero-paragraph{
+    color: #fff;
+}
 .hero-copy{
     position:relative;
     z-index:1
