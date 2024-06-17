@@ -1,0 +1,307 @@
+<html>
+    <head>
+        <title>re:ipl - summer 2024</title>
+        <style id="greenCSS" media="all">
+body {
+    background-color: #172920;
+}
+pre {
+    color: #25FF92;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+}
+pre a {
+    color: #172920;
+    background-color: #25FF92;
+    text-decoration: none;
+}
+pre a:hover {
+    color: #25FF92;
+    background-color: #172920;
+    text-decoration: none;
+}
+        </style>
+        <style id="amberCSS" media="max-width: 1px;">
+body {
+    background-color: #172920;
+}
+pre {
+    color: #ffb325;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+}
+pre a {
+    color: #172920;
+    background-color: #ffb325;
+    text-decoration: none;
+}
+pre a:hover {
+    color: #ffb325;
+    background-color: #172920;
+    text-decoration: none;
+}
+        </style>
+        <style id="whiteCSS" media="max-width: 1px;">
+body {
+    background-color: #172920;
+}
+pre {
+    color: #d0d2d2;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+}
+pre a {
+    color: #172920;
+    background-color: #d0d2d2;
+    text-decoration: none;
+}
+pre a:hover {
+    color: #d0d2d2;
+    background-color: #172920;
+    text-decoration: none;
+}
+        </style>
+        <style id="angryCSS" media="max-width: 1px;">
+body {
+    background-color: #172920;
+}
+pre {
+    color: #ff2525;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+}
+pre a {
+    color: #172920;
+    background-color: #ff2525;
+    text-decoration: none;
+}
+pre a:hover {
+    color: #ff2525;
+    background-color: #172920;
+    text-decoration: none;
+}
+        </style>
+        <!-- We gotta get some JavaScript or else the cops'll get us. -->
+        <script>
+            function loadColor() {
+                var randomNumber = Math.floor(Math.random() * 4) + 1;
+
+                if (randomNumber == 1) {
+                    switchCSS('greenCSS');
+                } else if (randomNumber == 2) {
+                    switchCSS('amberCSS');
+                } else if (randomNumber == 3) {
+                    switchCSS('whiteCSS');
+                }
+            }
+
+            function switchCSS(cssID) {
+                var greenCSS = document.getElementById('greenCSS');
+                var amberCSS = document.getElementById('amberCSS');
+                var whiteCSS = document.getElementById('whiteCSS');
+                var angryCSS = document.getElementById('angryCSS');
+                var head = document.head;
+
+                if (cssID == 'amberCSS') {
+                    greenCSS.setAttribute("media", "max-width: 1px");
+                    amberCSS.setAttribute("media", "all");
+                    whiteCSS.setAttribute("media", "max-width: 1px");
+                    angryCSS.setAttribute("media", "max-width: 1px");
+                } else if (cssID == 'greenCSS') {
+                    greenCSS.setAttribute("media", "all");
+                    amberCSS.setAttribute("media", "max-width: 1px");
+                    whiteCSS.setAttribute("media", "max-width: 1px");
+                    angryCSS.setAttribute("media", "max-width: 1px");
+                } else if (cssID == 'whiteCSS') {
+                    greenCSS.setAttribute("media", "max-width: 1px");
+                    amberCSS.setAttribute("media", "max-width: 1px");
+                    whiteCSS.setAttribute("media", "all");
+                    angryCSS.setAttribute("media", "max-width: 1px");
+                } else if (cssID == 'angryCSS') {
+                    greenCSS.setAttribute("media", "max-width: 1px");
+                    amberCSS.setAttribute("media", "max-width: 1px");
+                    whiteCSS.setAttribute("media", "max-width: 1px");
+                    angryCSS.setAttribute("media", "all");
+                }
+            }
+        
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'F7') {
+                    console.log('PF7');
+                } else if (event.key === 'F8') {
+                    var lineHeight = parseFloat(window.getComputedStyle(document.getElementById('top')).lineHeight);
+                    var pixelsToScroll = lineHeight * 24;
+
+                    // TODO Scroll by line height instead of pixels
+                    window.scrollBy(0, 24);
+                    window.scrollBy({
+                        top: pixelsToScroll,
+                        behavior: 'instant',
+                    });
+                }
+            });
+        </script>
+    </head>
+    <body onload="loadColor()">
+        <pre>
+24219 19:00:00.00 JOB00079 00000090  IEF403I REIPL - STARTED - TIME=19.00.00    
+<a href="#" onclick="switchCSS('amberCSS')">AMBER</a>|<a href="#" onclick="switchCSS('greenCSS')">GREEN</a>|<a href="#" onclick="switchCSS('whiteCSS')">WHITE</a>|<a href="#" onclick="switchCSS('angryCSS')">ANGRY</a>                                                         
+                                               iiii                     llllll  
+                                              i::::i                    l::::l  
+  W E L C O M E  T O                           iiii                     l::::l  
+                                                                        l::::l  
+rrrr   rrrrrrrrr       eeeeeeeeeee           iiiiiiippppp   ppppppppp    l:::l  
+r:::rrr:::::::::r    ee:::::::::::ee    ###  i:::::ip::::ppp:::::::::p   l:::l  
+r::::::::::::::::r  e:::::eeeee:::::ee #:::#  i::::ip:::::::::::::::::p  l:::l  
+rr:::::rrrrr::::::re:::::e     e:::::e  ###   i::::ipp::::::ppppp::::::p l:::l  
+ r::::r     r:::::re::::::eeeee::::::e        i::::i p:::::p     p:::::p l:::l  
+ r::::r     rrrrrrre::::::::::::::::e         i::::i p:::::p     p:::::p l:::l  
+ r::::r            e:::::eeeeeeeeeee          i::::i p:::::p     p:::::p l:::l  
+ r::::r            e::::::e             ###   i::::i p:::::p    p::::::p l:::l  
+ r::::r            e:::::::e           #:::# i::::::ip:::::ppppp:::::::pl:::::l 
+ r::::r             e:::::::eeeeeeee    ###  i::::::ip::::::::::::::::p l:::::l 
+ r::::r              ee::::::::::::e         i::::::ip::::::::::::::pp  l:::::l 
+ rrrrrr                eeeeeeeeeeeee         iiiiiiiip::::::pppppppp    lllllll 
+                                                     p:::::p                    
+             BROUGHT TO YOU BY                       p:::::p     SUMMER         
+                  SEVEN9S                           p:::::::p     2024          
+                  AND THE                           p:::::::p                   
+        SYSTEM Z ENTHUSIASTS DISCORD                p:::::::p                   
+                                                    ppppppppp                   
+                                                                                
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="top">
+STEPNAME PROCSTEP DDNAME   RECFM        LRECL     RECS  DSID                    
+-------- -------- -------- ------------ --------- ----- ----                    
+<a href='#who'>WHO     </a> -        <a href='#seven9s'>SEVEN9S </a> UA           80         21   2                       
+<a href='#who'>WHO     </a> -        <a href='#sze'>SZE     </a> UA           80         16   3                       
+<a href='#what'>WHAT    </a> -        <a href='#'>WHATISIT</a> V            80         30   4                       
+<a href='#when'>WHEN    </a> -        <a href='#'>D080624 </a> VA           80        342   5                       
+<a href='#where'>WHERE   </a> -        <a href='#'>SPARK-KC</a> VA           80        171   103                     
+<a href='#why'>WHY     </a> -        <a href='#'>WHYSHLDI</a> VA           80        189   104                     
+<a href='#how'>HOW     </a> -        <a href='#'>HOWTO   </a> VA           80        442   105                     
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="who">
+DD:WHO (<a href="#top">TOP</a>)                                                                    
+        </pre>
+        <pre id="seven9s">
+                                  ┌─┐┌─┐┌─┐                                     
+                                  └─┘└─┘└─┘                                     
+                                  ┌─┐   ┌─┐                                     
+                                  └─┘   └─┘                                     
+                                  ┌─┐┌─┐┌─┐                                     
+                                  └─┘└─┘└─┘                                     
+                                        ┌─┐                                     
+                                        └─┘                                     
+                                  ┌─┐┌─┐┌─┐                                     
+                                  └─┘└─┘└─┘                                     
+                                  S E V E N                                     
+                                  N I N E S                    (<a href="https://www.seven9s.com" target="_blank">WWW.SEVEN9S.COM</a>)
+                                                                                
+Seven9s is hosting the inaugural re:ipl meetup. As a proponent of modern mainfr-
+ame culture, we believe that at this inflection point in mainframe technology   
+it is time to reinvent how we meet and discuss pertinent topics affecting the   
+industry. This starts with reinventing how we share knowledge about the mainfra-
+me both online and in-person. re:ipl addresses the need for a more user-focused 
+and fluid meetup model by empowering knowledge sharing in a participant and glo-
+bal first model where all are encouraged to participate regardless of level of  
+expertise and location.                                                         
+        </pre>
+        <pre id="sze">
+                                  .-_____-.                                     
+                               .-'         '-.                                  
+                             .'   .--. .--.   '.                                
+                             |    '--' '--'    |                                
+                             '.  -._______.-  .'                                
+                               '-'         '-'                  (<a href="https://discord.gg/sze">DISCORD.GG/sze</a>)
+
+In partnership with the System Z Enthusiasts Discord, we aim to redefine intera-
+ction within the mainframe community and the overall technology community. We   
+focus on the real-time sharing of knowledge by inviting our global audience to  
+the table by broadcasting all re:ipl events online through the System Z Enthusi-
+asts Discord community.                                                         
+
+We highly encourage anyone interested in participating in this event to be enga-
+ged in our <a href="https://discord.gg/sze" target="_blank">DISCORD COMMUNITY</a> before, during, and after the event to stay connec-
+ted to current events, technical discussion, and other virtual events available.
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="what">
+DD:WHAT (<a href="#top">TOP</a>)                                                                   
+
+re:ipl is an evening-length meetup offering compelling mainframe culture topics 
+where attendees can collaborate, share knowledge, and focus on the future of    
+mainframe technology in a new way.                                              
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="when">
+DD:WHEN (<a href="#top">TOP</a>)                                                                    
+
+re:ipl takes place on Tuesday, August 6th at 7:00 PM.                           
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="where">
+DD:WHERE (<a href="#top">TOP</a>)                                                                  
+
+re:ipl is hosted at <a href="https://g.page/sparkkansascity?share" target="_blank">SPARK KANSAS CITY</a> at the northeast corner of Walnut and Tru-
+man. The address is 1475 Walnut Street, Kansas City, MO 64106. Attendees are en-
+couraged to use a rideshare (like Uber or Lyft) or walk from the Loew's Hotel.  
+
+To get from Loew's to re:ipl, head north on Wyandotte to 14th Street, take a ri-
+ght turn. Continue on 14th Street until you reach Walnut and take anothe right. 
+You will see Spark on your left when you reach Truman Road.                     
+
+If you're feeling adventurous, you can try and follow our EBCDIC map here*:     
++------------------------------------------------------------------------------+
+| |            |           B|            |          W |          G|            |
+| |            |           A|           M|          A |          R|  T-MOBILE  |
+|-+--W 14TH ST-+-----------L+-----------A+----------L-+----------A+            |
+| |            |           T|           I|          N |          N|   CENTER   |
+| | KANSAS    W|           I|           N|          U | re:ipl   D|            |
+| |  CITY     Y+&lt;-.        M|            |          T |<a href="https://sparkcoworking.com/kansas-city/" target="_blank">*</a>&lt;==       |            |
+| CONVENTION  A|--.'------&lt;O+&lt;-TRUMAN RD&lt;+&lt;----------&lt;+&lt;---------&lt;+&lt;----------&lt;|
+| | CENTER    N|&lt;&lt;-------&lt;&lt;R|&lt;&lt;--------&lt;&lt;|&lt;&lt;-I-670--&lt;&lt;|&lt;&lt;-------&lt;&lt;|&lt;&lt;--------&lt;&lt;|
+| |           D|&lt;&lt;-------&lt;&lt;E|&lt;&lt;--------&lt;&lt;|&lt;&lt;-I-670--&lt;&lt;|&lt;&lt;-------&lt;&lt;|&lt;&lt;--------&lt;&lt;|
+| |           O|&gt;&gt;--------&gt;&gt;|&gt;&gt;--------&gt;&gt;|&gt;&gt;-I-670--&gt;&gt;|&gt;&gt;-------&gt;&gt;|&gt;&gt;--------&gt;&gt;|
+| |           T| LOEWS     A|           S|           R|          B|            |
+| |           T| HOTEL     V|           T|           D|          L|            |
+| |           E|<a href="https://www.loewshotels.com/kansas-city-hotel" target="_blank">*</a>&lt;==       E|            |            |          V|            |
++------------------------------------------------------------------------------+
+         * - Seven9s, SZE, and re:ipl are not responsible for lost participants.
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="why">
+DD:WHY (<a href="#top">TOP</a>)                                                                    
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="how">
+DD:HOW (<a href="#top">TOP</a>)                                                                    
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre>
+24219 22:00:00.00 JOB00079 00000090  IEF404I REIPL - ENDED - TIME=22.00.00      
+        </pre>
+    </body>
+</html>
