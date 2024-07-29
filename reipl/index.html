@@ -87,6 +87,92 @@ pre a:hover {
         </style>
         <!-- We gotta get some JavaScript or else the cops'll get us. -->
         <script>
+            async function fetchAndDisplayJSON() {
+                try {
+                    const response = await fetch('http://52.116.26.152/schedule/schedule.php');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    displayJSONData(data, true);
+                } catch (error) {
+                    document.getElementById('jsonData').textContent = `Error: ${error.message}`;
+                }
+            }
+            
+            function displayJSONData(data, scheduleDisplay = false) {
+                const rooms = ["Main Stage", "Breakout #1", "Breakout #2"];
+                const timeSlots = [];
+                const formattedData = {};
+                // Extract and sort time slots
+                Object.values(data).forEach(({ 'time-start': start, 'time-end': end, room }) => {
+                    if (!timeSlots.includes(start+' - '+end)) {
+                        timeSlots.push(start+' - '+end);
+                    }
+                });
+                // Prepare an empty structure for each room and time slot
+                timeSlots.sort().forEach(time => {
+                    formattedData[time] = {};
+                    rooms.forEach(room => {
+                        formattedData[time][room] = "Available"; // Default value
+                    });
+                });
+                // Fill in data
+                Object.entries(data).forEach(([slot, { 'time-start': start, 'time-end': end, room, topic }]) => {
+                    timeSlot = start+' - '+end;
+                    formattedData[timeSlot][room] = topic;
+                    console.log(formattedData);
+                    if (formattedData[start] && formattedData[start][room] === "N/A") {
+                        formattedData[start][room] = topic;
+                        console.log(formattedData);
+                    }
+                });
+                // Format output
+                let output = '';
+                
+                // Create header row
+                headerSeparator = '\n';
+                if(scheduleDisplay)
+                {
+                    headerSeparator = "+--------------+-----------------------------------+------------------------------------+------------------------------------+\n";
+                } else {
+                    headerSeparator = "+--------------+--------------------+--------------------+---------------------+\n";
+                }
+                output += headerSeparator;
+                if(scheduleDisplay) {
+                    output += '| ' + formatString("Time", 13) + '| ' + formatString("Main Stage", 34) + '| ' + formatString("Breakout #1", 35) + '| ' + formatString("Breakout #2", 35) + '|\n';
+                } else {
+                    output += '| ' + formatString("Time", 13) + '| ' + formatString("Main Stage", 19) + '| ' + formatString("Breakout #1", 19) + '| ' + formatString("Breakout #2", 20) + '|\n';
+                }
+                output += headerSeparator;
+                // Add data rows
+                timeSlots.sort().forEach(time => {
+                    mainStage = formattedData[time]['Main Stage'].toUpperCase();
+                    breakoutOne = formattedData[time]['Breakout #1'];
+                    breakoutTwo = formattedData[time]['Breakout #2'];
+                    if(time == '700p - 715p' || time == '940p - 950p') {
+                        breakoutOne = breakoutTwo = '-';
+                    }
+                    if(scheduleDisplay)
+                    {
+                        output += '| ' + formatString(time, 13) + '| ' + formatString(mainStage, 34) + '| ' + formatString(breakoutOne, 35) + '| ' + formatString(breakoutTwo, 35) + '|\n';
+                    } else {
+                        output += '| ' + formatString(time, 13) + '| ' + formatString(mainStage, 19) + '| ' + formatString(breakoutOne, 19) + '| ' + formatString(breakoutTwo, 20) + '|\n';
+                    }
+                });
+                output += headerSeparator;
+                document.getElementById('jsonData').textContent = output;
+            }
+            function formatString(str, length, padChar = ' ') {
+                str = str.toUpperCase();
+                if (str.length > length) {
+                    return str.slice(0, length); // Truncate if longer than required length
+                }
+                return str.padEnd(length, padChar); // Pad if shorter than required length
+            }
+            // Fetch and display JSON on page load
+            fetchAndDisplayJSON();
+            
             function loadColor() {
                 var randomNumber = Math.floor(Math.random() * 4) + 1;
 
@@ -252,6 +338,9 @@ mainframe technology in a new way.
 DD:WHEN (<a href="#top">TOP</a>)                                                                    
 
 re:ipl takes place on Tuesday, August 6th, 2024 at 7:00 PM.                     
+        </pre>
+        <pre id="jsonData">
+RETICULATING SPLINES . . .                                                      
         </pre>
         <pre>
 //* --------------------------------------------------------------------------- 
