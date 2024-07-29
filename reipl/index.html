@@ -94,7 +94,7 @@ pre a:hover {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     const data = await response.json();
-                    displayJSONData(data, true);
+                    displayJSONData(data);
                 } catch (error) {
                     document.getElementById('jsonData').textContent = `Error: ${error.message}`;
                 }
