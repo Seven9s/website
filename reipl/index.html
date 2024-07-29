@@ -121,10 +121,8 @@ pre a:hover {
                 Object.entries(data).forEach(([slot, { 'time-start': start, 'time-end': end, room, topic }]) => {
                     timeSlot = start+' - '+end;
                     formattedData[timeSlot][room] = topic;
-                    console.log(formattedData);
                     if (formattedData[start] && formattedData[start][room] === "N/A") {
                         formattedData[start][room] = topic;
-                        console.log(formattedData);
                     }
                 });
                 // Format output
