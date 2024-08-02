@@ -93,10 +93,12 @@ pre a:hover {
         <!-- We gotta get some JavaScript or else the cops'll get us. -->
         <script>
             function adjustFontSize(change) {
-                var preElement = document.getElementById('top');
-                var style = window.getComputedStyle(preElement, null).getPropertyValue('font-size');
-                var currentSize = parseFloat(style);
-                preElement.style.fontSize = (currentSize + change) + 'px';
+                var preElements = document.getElementsByTagName('pre');
+                for (var i = 0; i < preElements.length; i++) {
+                    var style = window.getComputedStyle(preElements[i], null).getPropertyValue('font-size');
+                    var currentSize = parseFloat(style);
+                    preElements[i].style.fontSize = (currentSize + change) + 'px';
+                }
             }
             
             async function fetchAndDisplayJSON() {
