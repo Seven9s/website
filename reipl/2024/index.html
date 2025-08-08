@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>re:ipl - summer 2024</title>
+        <style id="greenCSS" media="all">
+body {
+    background-color: #172920;
+}
+pre {
+    color: #25FF92;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+    font-size: 16 px;
+}
+pre a {
+    color: #172920;
+    background-color: #25FF92;
+    text-decoration: none;
+}
+pre a:hover {
+    color: #25FF92;
+    background-color: #172920;
+    text-decoration: none;
+}
+        </style>
+        <style id="amberCSS" media="max-width: 1px;">
+body {
+    background-color: #172920;
+}
+pre {
+    color: #ffb325;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+    font-size: 16 px;
+}
+pre a {
+    color: #172920;
+    background-color: #ffb325;
+    text-decoration: none;
+}
+pre a:hover {
+    color: #ffb325;
+    background-color: #172920;
+    text-decoration: none;
+}
+        </style>
+        <style id="whiteCSS" media="max-width: 1px;">
+body {
+    background-color: #172920;
+}
+pre {
+    color: #d0d2d2;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+    font-size: 16 px;
+}
+pre a {
+    color: #172920;
+    background-color: #d0d2d2;
+    text-decoration: none;
+}
+pre a:hover {
+    color: #d0d2d2;
+    background-color: #172920;
+    text-decoration: none;
+}
+        </style>
+        <style id="angryCSS" media="max-width: 1px;">
+body {
+    background-color: #172920;
+}
+pre {
+    color: #ff2525;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+    font-size: 16 px;
+}
+pre a {
+    color: #172920;
+    background-color: #ff2525;
+    text-decoration: none;
+}
+pre a:hover {
+    color: #ff2525;
+    background-color: #172920;
+    text-decoration: none;
+}
+        </style>
+        <!-- We gotta get some JavaScript or else the cops'll get us. -->
+        <script>
+            function adjustFontSize(change) {
+                var preElements = document.getElementsByTagName('pre');
+                for (var i = 0; i < preElements.length; i++) {
+                    var style = window.getComputedStyle(preElements[i], null).getPropertyValue('font-size');
+                    var currentSize = parseFloat(style);
+                    preElements[i].style.fontSize = (currentSize + change) + 'px';
+                }
+            }
+            
+            async function fetchAndDisplayJSON() {
+                try {
+                    const response = await fetch('https://schedserv.s9s.me/schedule/schedule.php');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    displayJSONData(data);
+                } catch (error) {
+                    document.getElementById('jsonData').textContent = `Error: ${error.message}`;
+                }
+            }
+            
+            function displayJSONData(data, scheduleDisplay = false) {
+                const rooms = ["Main Stage", "Breakout #1", "Breakout #2"];
+                const timeSlots = [];
+                const formattedData = {};
+                // Extract and sort time slots
+                Object.values(data).forEach(({ 'time-start': start, 'time-end': end, room }) => {
+                    if (!timeSlots.includes(start+' - '+end)) {
+                        timeSlots.push(start+' - '+end);
+                    }
+                });
+                // Prepare an empty structure for each room and time slot
+                timeSlots.sort().forEach(time => {
+                    formattedData[time] = {};
+                    rooms.forEach(room => {
+                        formattedData[time][room] = "Available"; // Default value
+                    });
+                });
+                // Fill in data
+                Object.entries(data).forEach(([slot, { 'time-start': start, 'time-end': end, room, topic }]) => {
+                    timeSlot = start+' - '+end;
+                    formattedData[timeSlot][room] = topic;
+                    if (formattedData[start] && formattedData[start][room] === "N/A") {
+                        formattedData[start][room] = topic;
+                    }
+                });
+                // Format output
+                let output = '';
+                
+                // Create header row
+                headerSeparator = '\n';
+                if(scheduleDisplay)
+                {
+                    headerSeparator = "+--------------+-----------------------------------+------------------------------------+------------------------------------+\n";
+                } else {
+                    headerSeparator = "+--------------+--------------------+--------------------+---------------------+\n";
+                }
+                output += headerSeparator;
+                if(scheduleDisplay) {
+                    output += '| ' + formatString("Time", 13) + '| ' + formatString("Main Stage", 34) + '| ' + formatString("Breakout #1", 35) + '| ' + formatString("Breakout #2", 35) + '|\n';
+                } else {
+                    output += '| ' + formatString("Time", 13) + '| ' + formatString("Main Stage", 19) + '| ' + formatString("Breakout #1", 19) + '| ' + formatString("Breakout #2", 20) + '|\n';
+                }
+                output += headerSeparator;
+                // Add data rows
+                timeSlots.sort().forEach(time => {
+                    mainStage = formattedData[time]['Main Stage'].toUpperCase();
+                    breakoutOne = formattedData[time]['Breakout #1'];
+                    breakoutTwo = formattedData[time]['Breakout #2'];
+                    if(time == '700p - 715p' || time == '940p - 950p') {
+                        breakoutOne = breakoutTwo = '-';
+                    }
+                    if(scheduleDisplay)
+                    {
+                        output += '| ' + formatString(time, 13) + '| ' + formatString(mainStage, 34) + '| ' + formatString(breakoutOne, 35) + '| ' + formatString(breakoutTwo, 35) + '|\n';
+                    } else {
+                        output += '| ' + formatString(time, 13) + '| ' + formatString(mainStage, 19) + '| ' + formatString(breakoutOne, 19) + '| ' + formatString(breakoutTwo, 20) + '|\n';
+                    }
+                });
+                output += headerSeparator;
+                document.getElementById('jsonData').textContent = output;
+            }
+            function formatString(str, length, padChar = ' ') {
+                str = str.toUpperCase();
+                if (str.length > length) {
+                    return str.slice(0, length); // Truncate if longer than required length
+                }
+                return str.padEnd(length, padChar); // Pad if shorter than required length
+            }
+            // Fetch and display JSON on page load
+            fetchAndDisplayJSON();
+            
+            function loadColor() {
+                var randomNumber = Math.floor(Math.random() * 4) + 1;
+
+                if (randomNumber == 1) {
+                    switchCSS('greenCSS');
+                } else if (randomNumber == 2) {
+                    switchCSS('amberCSS');
+                } else if (randomNumber == 3) {
+                    switchCSS('whiteCSS');
+                }
+            }
+
+            function switchCSS(cssID) {
+                var greenCSS = document.getElementById('greenCSS');
+                var amberCSS = document.getElementById('amberCSS');
+                var whiteCSS = document.getElementById('whiteCSS');
+                var angryCSS = document.getElementById('angryCSS');
+                var head = document.head;
+
+                if (cssID == 'amberCSS') {
+                    greenCSS.setAttribute("media", "max-width: 1px");
+                    amberCSS.setAttribute("media", "all");
+                    whiteCSS.setAttribute("media", "max-width: 1px");
+                    angryCSS.setAttribute("media", "max-width: 1px");
+                } else if (cssID == 'greenCSS') {
+                    greenCSS.setAttribute("media", "all");
+                    amberCSS.setAttribute("media", "max-width: 1px");
+                    whiteCSS.setAttribute("media", "max-width: 1px");
+                    angryCSS.setAttribute("media", "max-width: 1px");
+                } else if (cssID == 'whiteCSS') {
+                    greenCSS.setAttribute("media", "max-width: 1px");
+                    amberCSS.setAttribute("media", "max-width: 1px");
+                    whiteCSS.setAttribute("media", "all");
+                    angryCSS.setAttribute("media", "max-width: 1px");
+                } else if (cssID == 'angryCSS') {
+                    greenCSS.setAttribute("media", "max-width: 1px");
+                    amberCSS.setAttribute("media", "max-width: 1px");
+                    whiteCSS.setAttribute("media", "max-width: 1px");
+                    angryCSS.setAttribute("media", "all");
+                }
+            }
+        
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'F7') {
+                    console.log('PF7');
+                } else if (event.key === 'F8') {
+                    var lineHeight = parseFloat(window.getComputedStyle(document.getElementById('top')).lineHeight);
+                    var pixelsToScroll = lineHeight * 24;
+
+                    // TODO Scroll by line height instead of pixels
+                    window.scrollBy(0, 24);
+                    window.scrollBy({
+                        top: pixelsToScroll,
+                        behavior: 'instant',
+                    });
+                }
+            });
+        </script>
+    </head>
+    <body onload="loadColor()">
+        <pre>
+24219 19:00:00.00 JOB00079 00000090  IEF403I REIPL - STARTED - TIME=19.00.00    
+<a href="#" onclick="switchCSS('amberCSS')">AMBER</a>|<a href="#" onclick="switchCSS('greenCSS')">GREEN</a>|<a href="#" onclick="switchCSS('whiteCSS')">WHITE</a>|<a href="#" onclick="switchCSS('angryCSS')">ANGRY</a>                                                         
+<a href="#" onclick="adjustFontSize(1)">INCREASE FONT</a> | <a href="#" onclick="adjustFontSize(-1)">DECREASE FONT</a>                                                   
+                                               iiii                     llllll  
+                                              i::::i                    l::::l  
+  W E L C O M E  T O                           iiii                     l::::l  
+                                                                        l::::l  
+rrrr   rrrrrrrrr       eeeeeeeeeee           iiiiiiippppp   ppppppppp    l:::l  
+r:::rrr:::::::::r    ee:::::::::::ee    ###  i:::::ip::::ppp:::::::::p   l:::l  
+r::::::::::::::::r  e:::::eeeee:::::ee #:::#  i::::ip:::::::::::::::::p  l:::l  
+rr:::::rrrrr::::::re:::::e     e:::::e  ###   i::::ipp::::::ppppp::::::p l:::l  
+ r::::r     r:::::re::::::eeeee::::::e        i::::i p:::::p     p:::::p l:::l  
+ r::::r     rrrrrrre::::::::::::::::e         i::::i p:::::p     p:::::p l:::l  
+ r::::r            e:::::eeeeeeeeeee          i::::i p:::::p     p:::::p l:::l  
+ r::::r            e::::::e             ###   i::::i p:::::p    p::::::p l:::l  
+ r::::r            e:::::::e           #:::# i::::::ip:::::ppppp:::::::pl:::::l 
+ r::::r             e:::::::eeeeeeee    ###  i::::::ip::::::::::::::::p l:::::l 
+ r::::r              ee::::::::::::e         i::::::ip::::::::::::::pp  l:::::l 
+ rrrrrr                eeeeeeeeeeeee         iiiiiiiip::::::pppppppp    lllllll 
+                                                     p:::::p                    
+             BROUGHT TO YOU BY                       p:::::p     SUMMER         
+                  SEVEN9S                           p:::::::p     2024          
+                  AND THE                           p:::::::p                   
+        SYSTEM Z ENTHUSIASTS DISCORD                p:::::::p                   
+                                                    ppppppppp                   
+                                                                                
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="top">
+STEPNAME PROCSTEP DDNAME   RECFM        LRECL     RECS  DSID                    
+-------- -------- -------- ------------ --------- ----- ----                    
+<a href='#who'>WHO     </a> -        <a href='#seven9s'>SEVEN9S </a> UA           80         21   2                       
+<a href='#who'>WHO     </a> -        <a href='#sze'>SZE     </a> UA           80         16   3                       
+<a href='#what'>WHAT    </a> -        <a href='#what'>WHATISIT</a> V            80         30   4                       
+<a href='#when'>WHEN    </a> -        <a href='#when'>D080624 </a> VA           80        342   5                       
+<a href='#where'>WHERE   </a> -        <a href='#where'>SPARK-KC</a> VA           80        171   103                     
+<a href='#why'>WHY     </a> -        <a href='#why'>WHYSHLDI</a> VA           80        189   104                     
+<a href='#how'>HOW     </a> -        <a href='#how'>HOWTO   </a> VA           80        442   105                     
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="who">
+DD:WHO (<a href="#top">TOP</a>)                                                                    
+        </pre>
+        <pre id="seven9s">
+                                  ┌─┐┌─┐┌─┐                                     
+                                  └─┘└─┘└─┘                                     
+                                  ┌─┐   ┌─┐                                     
+                                  └─┘   └─┘                                     
+                                  ┌─┐┌─┐┌─┐                                     
+                                  └─┘└─┘└─┘                                     
+                                        ┌─┐                                     
+                                        └─┘                                     
+                                  ┌─┐┌─┐┌─┐                                     
+                                  └─┘└─┘└─┘                                     
+                                  S E V E N                                     
+                                  N I N E S                    (<a href="https://www.seven9s.com" target="_blank">WWW.SEVEN9S.COM</a>)
+                                                                                
+Seven9s is hosting the inaugural re:ipl meetup. As a proponent of modern mainfr-
+ame culture, we believe that at this inflection point in mainframe technology   
+it is time to reinvent how we meet and discuss pertinent topics affecting the   
+industry. This starts with reinventing how we share knowledge about the mainfra-
+me both online and in-person. re:ipl addresses the need for a more user-focused 
+and fluid meetup model by empowering knowledge sharing in a participant and glo-
+bal first model where all are encouraged to participate regardless of level of  
+expertise and location.                                                         
+        </pre>
+        <pre id="sze">
+                                  .-_____-.                                     
+                               .-'         '-.                                  
+                             .'   .--. .--.   '.                                
+                             |    '--' '--'    |                                
+                             '.  -._______.-  .'                                
+                               '-'         '-'                  (<a href="https://discord.gg/sze">DISCORD.GG/sze</a>)
+
+In partnership with the System Z Enthusiasts Discord, we aim to redefine intera-
+ction within the mainframe community and the overall technology community. We   
+focus on the real-time sharing of knowledge by inviting our global audience to  
+the table by broadcasting all re:ipl events online through the System Z Enthusi-
+asts Discord community.                                                         
+
+We highly encourage anyone interested in participating in this event to be enga-
+ged in our <a href="https://discord.gg/sze" target="_blank">DISCORD COMMUNITY</a> before, during, and after the event to stay connec-
+ted to current events, technical discussion, and other virtual events available.
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="what">
+DD:WHAT (<a href="#top">TOP</a>)                                                                   
+
+re:ipl is an evening-length meetup offering compelling mainframe culture topics 
+where attendees can collaborate, share knowledge, and focus on the future of    
+mainframe technology in a new way.                                              
+        </pre>
+        <pre>
+Please see our handout <a href="All Attendees - One Pager.pdf">HERE</a> to learn more about re:ipl Kansas City.             
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="when">
+DD:WHEN (<a href="#top">TOP</a>)                                                                   
+
+re:ipl takes place on Tuesday, August 6th, 2024 at 7:00 PM.                     
+
+To schedule a breakout session in an available slot, see <a href="#how">HOW</a>.                   
+The re:ipl schedule below can be updated by refreshing this page:               
+        </pre>
+        <pre id="jsonData">
+RETICULATING SPLINES . . .                                                      
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="where">
+DD:WHERE (<a href="#top">TOP</a>)                                                                  
+
+re:ipl is hosted at <a href="https://g.page/sparkkansascity?share" target="_blank">SPARK KANSAS CITY</a> at the northeast corner of Walnut and Tru-
+man. The address is 1475 Walnut Street, Kansas City, MO 64106. Attendees are en-
+couraged to use a rideshare (like Uber or Lyft) or walk from the Loew's Hotel.  
+
+To get from Loew's to re:ipl, head north on Wyandotte to 14th Street, take a ri-
+ght turn. Continue on 14th Street until you reach Walnut and take another right.
+You will see Spark on your left when you reach Truman Road.                     
+
+If you're feeling adventurous, you can try and follow our EBCDIC map here*:     
++------------------------------------------------------------------------------+
+| |            |           B|            |          W |          G|            |
+| |            |           A|           M|          A |          R|  T-MOBILE  |
+|-+--W 14TH ST-+-----------L+-----------A+----------L-+----------A+            |
+| |            |           T|           I|          N |          N|   CENTER   |
+| | KANSAS    W|           I|           N|          U | re:ipl   D|            |
+| |  CITY     Y+&lt;-.        M|            |          T |<a href="https://sparkcoworking.com/kansas-city/" target="_blank">*</a>&lt;==       |            |
+| CONVENTION  A|--.'------&lt;O+&lt;-TRUMAN RD&lt;+&lt;----------&lt;+&lt;---------&lt;+&lt;----------&lt;|
+| | CENTER    N|&lt;&lt;-------&lt;&lt;R|&lt;&lt;--------&lt;&lt;|&lt;&lt;-I-670--&lt;&lt;|&lt;&lt;-------&lt;&lt;|&lt;&lt;--------&lt;&lt;|
+| |           D|&lt;&lt;-------&lt;&lt;E|&lt;&lt;--------&lt;&lt;|&lt;&lt;-I-670--&lt;&lt;|&lt;&lt;-------&lt;&lt;|&lt;&lt;--------&lt;&lt;|
+| |           O|&gt;&gt;--------&gt;&gt;|&gt;&gt;--------&gt;&gt;|&gt;&gt;-I-670--&gt;&gt;|&gt;&gt;-------&gt;&gt;|&gt;&gt;--------&gt;&gt;|
+| |           T| LOEWS     A|           S|           R|          B|            |
+| |           T| HOTEL     V|           T|           D|          L|            |
+| |           E|<a href="https://www.loewshotels.com/kansas-city-hotel" target="_blank">*</a>&lt;==       E|            |            |          V|            |
++------------------------------------------------------------------------------+
+         * - Seven9s, SZE, and re:ipl are not responsible for lost participants.
+
+For those more GOOEY, you can use our handy <a href="https://maps.app.goo.gl/fhYcQWTFdtdfS4rr9">GOOGLE MAPS</a> link.                   
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="why">
+DD:WHY (<a href="#top">TOP</a>)                                                                    
+
+In the beginning, mainframe user conferences were about sharing code and experi-
+ences focused on getting the most out of the system. Over time those sharing se-
+ssions gave way to vendor sessions focused mostly on how to take advantage of   
+their products. These sessions are mostly lecture with users listening to HOWTO 
+content.                                                                        
+
+re:ipl is focused on recreating the early user conference experience: users int-
+eracting using modern technologies and techniques. Instead of lecture, sessions 
+will be discussions, incorporating the ideas and perspectives of the entire aud-
+ience. Instead of an agenda picked out for the community, discussions revolve   
+around attendees' interests.                                                    
+
+The time has come for the mainframe community to return to its roots, work coll-
+ectively to address problems, build solutions, and network in the 21st century. 
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre id="how">
+DD:HOW (<a href="#top">TOP</a>)                                                                    
+        </pre>
+        <pre>
+HOW DO I REGISTER FOR RE:IPL?                                                   
+        </pre>
+        <pre>
+Registration is not required for either virtual or in person attendance. To att-
+end re:ipl follow the instructions below for how you want to join.              
+        </pre>
+        <pre>
+HOW DO I JOIN VIRTUALLY?                                                        
+        </pre>
+        <pre>
+Simply join <a href="https://discord.com/channels/880322471608344597/1263562044360097852">DISCORD</a> when the event kicks off and you're free to participate in  
+the event. See our document <a href="All Attendees - One Pager.pdf">HERE</a> for more details about what to do once you're  
+in!                                                                             
+        </pre>
+        <pre>
+HOW DO I JOIN IN PERSON?                                                        
+        </pre>
+        <pre>
+re:ipl Kicks off at Spark Kansas City (1475 W Walnut St, Kansas City, MO) @ 7p  
+Central US. We have room for 75 people and have planned food, drink, and swag   
+for that count. If you would like to partake, we recommend you arrive on time   
+(we'll likely let you in early if you turn up early). We will be recommending   
+the folks monitoring the doors of the venue that once we have run out of pins   
+(75 of those, they are numbered) we will start suggesting people not be allowed 
+into the event. We will try and monitor the flow of folks. Respectfully, we ask 
+that you do not make our hosts (Spark Kansas City) regret hosting us by going o-
+ver our numbers. Food, drink, and swag are first come, first served.            
+        </pre>
+        <pre>
+HOW DO I HOST A BREAKOUT?                                                       
+        </pre>
+        <pre>
+Breakout slots are given in a first come, first served basis. We have two break-
+out rooms available. Refresh the schedule <a href="#when">HERE</a> and see the below question for   
+how to book a breakout slot for your topic. In person attendees are encouraged  
+to use <a href="https://discord.com/channels/880322471608344597/1263562044360097852">DISCORD</a> to book a breakout.                                              
+        </pre>
+        <pre>
+HOW DO I BOOK A BREAKOUT SLOT?                                                  
+        </pre>
+        <pre>
+To book a breakout, first join the #chat channel on <a href="https://discord.com/channels/880322471608344597/1263562044360097852">DISCORD.</a> Once joined, you   
+will send a message requesting to book a slot by providing the time, the room,  
+and your topic. That message might look something like this:                    
+
+> Hi there, I'd like to book Breakout #1 at 800P to talk about "Getting Along on
+> Z"!                                                                           
+
+A helpful re:ipl Virtual Volunteer will book the slot for you and confirm that 
+you are set to host that space. Once your slot begins, make your way to the     
+breakout space, and follow our <a href="Host Guide.pdf">HANDY GUIDE</a> to being a hospitable breakout host. 
+        </pre>
+        <pre>
+HOW DO I PARTICIPATE IN A BREAKOUT?                                             
+        </pre>
+        <pre>
+Participating in a breakout is as simple as looking at the <a href="#when">SCHEDULE</a>, figuring   
+out which breakout room is hosting the topic you want to join and either going  
+to that room in person, or joining the stage channel virtually by clicking on   
+it.                                                                             
+
+Once in the room, either speak in turn as you would any other respectful conver-
+sation, or use the Discord interface to "Request to Speak" and you will be brou-
+ght on stage to share your thoughts. Once you've shared your thoughts, be sure  
+to "Leave the Stage" to return to the audience until you have something further 
+to add to the conversation.                                                     
+        </pre>
+        <pre>
+//* --------------------------------------------------------------------------- 
+        </pre>
+        <pre>
+24219 22:00:00.00 JOB00079 00000090  IEF404I REIPL - ENDED - TIME=22.00.00      
+        </pre>
+    </body>
+</html>
