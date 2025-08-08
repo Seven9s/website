@@ -100,81 +100,7 @@ pre a:hover {
                     preElements[i].style.fontSize = (currentSize + change) + 'px';
                 }
             }
-            
-            async function fetchAndDisplayJSON() {
-                try {
-                    const response = await fetch('https://schedserv.s9s.me/schedule/schedule.php');
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    displayJSONData(data);
-                } catch (error) {
-                    document.getElementById('jsonData').textContent = `Error: ${error.message}`;
-                }
-            }
-            
-            function displayJSONData(data, scheduleDisplay = false) {
-                const rooms = ["Main Stage", "Breakout #1", "Breakout #2"];
-                const timeSlots = [];
-                const formattedData = {};
-                // Extract and sort time slots
-                Object.values(data).forEach(({ 'time-start': start, 'time-end': end, room }) => {
-                    if (!timeSlots.includes(start+' - '+end)) {
-                        timeSlots.push(start+' - '+end);
-                    }
-                });
-                // Prepare an empty structure for each room and time slot
-                timeSlots.sort().forEach(time => {
-                    formattedData[time] = {};
-                    rooms.forEach(room => {
-                        formattedData[time][room] = "Available"; // Default value
-                    });
-                });
-                // Fill in data
-                Object.entries(data).forEach(([slot, { 'time-start': start, 'time-end': end, room, topic }]) => {
-                    timeSlot = start+' - '+end;
-                    formattedData[timeSlot][room] = topic;
-                    if (formattedData[start] && formattedData[start][room] === "N/A") {
-                        formattedData[start][room] = topic;
-                    }
-                });
-                // Format output
-                let output = '';
-                
-                // Create header row
-                headerSeparator = '\n';
-                if(scheduleDisplay)
-                {
-                    headerSeparator = "+--------------+-----------------------------------+------------------------------------+------------------------------------+\n";
-                } else {
-                    headerSeparator = "+--------------+--------------------+--------------------+---------------------+\n";
-                }
-                output += headerSeparator;
-                if(scheduleDisplay) {
-                    output += '| ' + formatString("Time", 13) + '| ' + formatString("Main Stage", 34) + '| ' + formatString("Breakout #1", 35) + '| ' + formatString("Breakout #2", 35) + '|\n';
-                } else {
-                    output += '| ' + formatString("Time", 13) + '| ' + formatString("Main Stage", 19) + '| ' + formatString("Breakout #1", 19) + '| ' + formatString("Breakout #2", 20) + '|\n';
-                }
-                output += headerSeparator;
-                // Add data rows
-                timeSlots.sort().forEach(time => {
-                    mainStage = formattedData[time]['Main Stage'].toUpperCase();
-                    breakoutOne = formattedData[time]['Breakout #1'];
-                    breakoutTwo = formattedData[time]['Breakout #2'];
-                    if(time == '700p - 715p' || time == '940p - 950p') {
-                        breakoutOne = breakoutTwo = '-';
-                    }
-                    if(scheduleDisplay)
-                    {
-                        output += '| ' + formatString(time, 13) + '| ' + formatString(mainStage, 34) + '| ' + formatString(breakoutOne, 35) + '| ' + formatString(breakoutTwo, 35) + '|\n';
-                    } else {
-                        output += '| ' + formatString(time, 13) + '| ' + formatString(mainStage, 19) + '| ' + formatString(breakoutOne, 19) + '| ' + formatString(breakoutTwo, 20) + '|\n';
-                    }
-                });
-                output += headerSeparator;
-                document.getElementById('jsonData').textContent = output;
-            }
+                        
             function formatString(str, length, padChar = ' ') {
                 str = str.toUpperCase();
                 if (str.length > length) {
@@ -182,8 +108,6 @@ pre a:hover {
                 }
                 return str.padEnd(length, padChar); // Pad if shorter than required length
             }
-            // Fetch and display JSON on page load
-            fetchAndDisplayJSON();
             
             function loadColor() {
                 var randomNumber = Math.floor(Math.random() * 4) + 1;
@@ -267,7 +191,7 @@ rr:::::rrrrr::::::re:::::e     e:::::e  ###   i::::ipp::::::ppppp::::::p l:::l
  rrrrrr                eeeeeeeeeeeee         iiiiiiiip::::::pppppppp    lllllll 
                                                      p:::::p                    
              BROUGHT TO YOU BY                       p:::::p     SUMMER         
-                  SEVEN9S                           p:::::::p     2024          
+                  SEVEN9S                           p:::::::p     2025          
                   AND THE                           p:::::::p                   
         SYSTEM Z ENTHUSIASTS DISCORD                p:::::::p                   
                                                     ppppppppp                   
@@ -282,8 +206,8 @@ STEPNAME PROCSTEP DDNAME   RECFM        LRECL     RECS  DSID
 <a href='#who'>WHO     </a> -        <a href='#seven9s'>SEVEN9S </a> UA           80         21   2                       
 <a href='#who'>WHO     </a> -        <a href='#sze'>SZE     </a> UA           80         16   3                       
 <a href='#what'>WHAT    </a> -        <a href='#what'>WHATISIT</a> V            80         30   4                       
-<a href='#when'>WHEN    </a> -        <a href='#when'>D080624 </a> VA           80        342   5                       
-<a href='#where'>WHERE   </a> -        <a href='#where'>SPARK-KC</a> VA           80        171   103                     
+<a href='#when'>WHEN    </a> -        <a href='#when'>D080625 </a> VA           80        342   5                       
+<a href='#where'>WHERE   </a> -        <a href='#where'>COHATCHOC</a> VA           80        171   103                    
 <a href='#why'>WHY     </a> -        <a href='#why'>WHYSHLDI</a> VA           80        189   104                     
 <a href='#how'>HOW     </a> -        <a href='#how'>HOWTO   </a> VA           80        442   105                     
         </pre>
@@ -307,14 +231,16 @@ DD:WHO (<a href="#top">TOP</a>)
                                   S E V E N                                     
                                   N I N E S                    (<a href="https://www.seven9s.com" target="_blank">WWW.SEVEN9S.COM</a>)
                                                                                 
-Seven9s is hosting the inaugural re:ipl meetup. As a proponent of modern mainfr-
-ame culture, we believe that at this inflection point in mainframe technology   
-it is time to reinvent how we meet and discuss pertinent topics affecting the   
-industry. This starts with reinventing how we share knowledge about the mainfra-
-me both online and in-person. re:ipl addresses the need for a more user-focused 
-and fluid meetup model by empowering knowledge sharing in a participant and glo-
-bal first model where all are encouraged to participate regardless of level of  
-expertise and location.                                                         
+Seven9s is hosting the second annual re:ipl meetup. As a champion of modern ma-
+inframe culture, we believe that at this pivotal moment in mainframe technology
+it’s time to continue reinventing how we meet and discuss the issues shaping   
+our industry. This means rethinking how we share knowledge about the mainframe 
+both online and in person.                                                     
+
+re:ipl delivers on this vision with a more user-focused, flexible meetup model 
+that empowers knowledge sharing through a participant-driven, global-first app-
+roach. Everyone is encouraged to take part, regardless of experience level or 
+location, ensuring a vibrant exchange of ideas year after year.                
         </pre>
         <pre id="sze">
                                   .-_____-.                                     
@@ -324,15 +250,15 @@ expertise and location.
                              '.  -._______.-  .'                                
                                '-'         '-'                  (<a href="https://discord.gg/sze">DISCORD.GG/sze</a>)
 
-In partnership with the System Z Enthusiasts Discord, we aim to redefine intera-
-ction within the mainframe community and the overall technology community. We   
-focus on the real-time sharing of knowledge by inviting our global audience to  
-the table by broadcasting all re:ipl events online through the System Z Enthusi-
-asts Discord community.                                                         
+In partnership with the System Z Enthusiasts Discord, re:ipl is redefining how 
+the mainframe and broader technology communities connect. We embrace real-time 
+knowledge sharing by bringing our global audience together—streaming every     
+re:ipl session online through the System Z Enthusiasts Discord.                
 
-We highly encourage anyone interested in participating in this event to be enga-
-ged in our <a href="https://discord.gg/sze" target="_blank">DISCORD COMMUNITY</a> before, during, and after the event to stay connec-
-ted to current events, technical discussion, and other virtual events available.
+We invite you to be part of the conversation year-round by joining our <a href="https://discord.gg/sze" target="_blank">DISCORD 
+COMMUNITY</a>. Whether before, during, or after the event, it's the place to stay 
+connected with fellow enthusiasts, follow the latest mainframe developments,   
+dive into technical discussions, and take part in other virtual events.        
         </pre>
         <pre>
 //* --------------------------------------------------------------------------- 
